@@ -13,15 +13,7 @@ export default function Login() {
   const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
   const errorMessage = session?.error?.message;
-  const router = useRouter();
 
-  useEffect(() => {
-    // Check if the user is authenticated
-    if (session) {
-      // Redirect to the home page or any other desired page
-      router.push('/home');
-    }
-  }, [session, router]);
 
   useEffect(() => {
     const setUpProviders = async () => {
@@ -104,7 +96,7 @@ notBlackListed:(fieldValue)=>{
 <button 
 type='button' 
 className='bg-black w-full h-[60px] my-5 rounded-sm text-white font-medium flex items-center justify-center gap-7' 
-onClick={() => signIn()}>
+onClick={() => signIn('google', { callbackUrl: 'http://localhost:3000/home' })}>
 <Image src="./assets/googleicon.svg" alt='Google Logo' width={30} height={30}/> Continue with Google
 </button>
 </form>
