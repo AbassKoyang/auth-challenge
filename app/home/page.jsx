@@ -1,14 +1,21 @@
-import React from 'react';
-import { signIn, signOut, useSession, getProviders, SessionProvider} from 'next-auth/react';
-import { useState, useEffect } from 'react';
+"use client"
+import authOptions from "@/utils/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-const page = () => {
+export default async function Dashboard() {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect("/login/?callbackUrl=/home");
+  }
   return (
-    <div>
-    <button type='button' onClick={() => signOut({callbackUrl: "http://localhost:3000/login"})}>Sign Out Now</button>
-    </div>
-
-  )
+    <main className="mx-auto mt-4 max-w-5xl px-6">
+      <h2>
+        {session !== null && (
+          <p className="text-4xl font-semibold">Hi {session?.user?.name}!</p>
+        )}
+      </h2>
+      <button type='button' onClick={() => signOut({callbackUrl: "http://localhost:3000/login"})}>Sign Out Now</button>
+    </main>
+  );
 }
-
-export default page

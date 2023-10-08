@@ -1,19 +1,39 @@
 "use client"
 import Image from 'next/image';
 import React from 'react';
-import {useForm} from 'react-hook-form';
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import {useForm, SubmitHandler} from 'react-hook-form';
 import { signIn, signOut, useSession, getProviders, SessionProvider} from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import GoogleButton from '@/Components/GoogleButton';
 
 export default function Login() {
-  const form = useForm();
-  const {formState, handleSubmit, register, control} = form;
-  const {errors} = formState;
-  const { data: session } = useSession();
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const {formState: { errors, isSubmitting }, handleSubmit, register, control, watch} = form;
+  const watchHolder = watch();
+  const [holdBtn, setHoldBtn] = useState(true);
+  const session = useSession();
   const [providers, setProviders] = useState(null);
   const errorMessage = session?.error?.message;
-
+  
+  useEffect(() => {
+    if (
+      watchHolder.email &&
+      watchHolder.password &&
+      watchHolder.terms
+    ) {
+      setHoldBtn(false);
+    } else {
+      setHoldBtn(true);
+    }
+  }, [watchHolder]);
+  
 
   useEffect(() => {
     const setUpProviders = async () => {
@@ -21,18 +41,47 @@ export default function Login() {
         const response = await getProviders();
         setProviders(response);
         console.log(response);
-        console.log(process.env.GOOGLE_CLIENT_ID)
         console.log(session)
+        const myVariable = process.env.GOOGLE_CLIENT_ID;
+
+        if (myVariable && myVariable.length > 0) {
+          // The environment variable exists and has a non-empty value.
+          // You can use it here.
+          console.error("environment variable works")
+        } else {
+          console.error("MY_VARIABLE is not set or is empty.");
+        }
       } catch (error) {
         console.error('Error fetching providers:', error);
       }
     };
     setUpProviders();
   }, []);
+
+const params = useSearchParams();
+const router = useRouter();
+const [error, setError] = useState(null);
+
+useEffect(() => {
+  setError(params.get("error"));
+}, [params]);
+
+if (session.status === "authenticated") {
+  router?.push("/home");
+}
+
+const formSubmit = (form) => {
+  const { email, password } = form;
+  signIn("credentials", {
+    email,
+    password,
+  });
+};
+
   
-  return (
+return (
 <main className="block min-h-screen lg:flex p-4 bg-[#202227]">
-<form onSubmit={handleSubmit()} noValidate className='bg-[#202227] w-full h-full lg:w-[45%] lg:px-24 lg:pr-28'>
+<form onSubmit={handleSubmit(formSubmit)} noValidate className='bg-[#202227] w-full h-full lg:w-[45%] lg:px-24 lg:pr-28'>
 <Image src="./assets/logo.svg"
 width={100}
 height={100}
@@ -81,11 +130,24 @@ notBlackListed:(fieldValue)=>{
 <p className='text-red-500 text-left font-normal text-[11px] mt-3'>{errorMessage && <p>{errorMessage}</p>}</p>
 </div>
 <div className='flex flex-row gap-4 items-center my-[23px]'>
-<input type='checkbox' className='outline-none border border-[#8692A6]'/>
+<input type='checkbox' name='terms' className='outline-none border border-[#8692A6]'
+{...register('terms',
+{
+  required:{
+    value: true,
+    message: "To proceed you must agree with our terms and conditions."
+  }
+})}
+/>
 <p className='font-normal font-poppins text-[13px] text-[#8692A6]'>I agree to terms & conditions</p>
 </div>
 
-<button type='submit' className='bg-[#5871EB] w-full h-[60px] my-10 mb-5 rounded-sm text-white font-medium flex items-center justify-center'>Login</button>
+<button type='submit'
+      disabled={holdBtn}
+      onClick={handleSubmit}
+      className={`text-white w-full  ${holdBtn ? "bg-[#8497f55d] cursor-not-allowed" : "bg-[#5871EB] cursor-pointer"} ease-in-out transition-all duration-300 w-full h-[60px] my-10 mb-5 rounded-sm text-white font-medium flex items-center justify-center`}>
+        Log In
+ </button>
 
 <div className='w-full flex items-center '>
 <div className='w-[50%] h-[0.5px] bg-[#F5F5F5]'></div>
@@ -93,12 +155,8 @@ notBlackListed:(fieldValue)=>{
 <div className='w-[50%] h-[0.5px] bg-[#F5F5F5]'></div>
 </div>
 
-<button 
-type='button' 
-className='bg-black w-full h-[60px] my-5 rounded-sm text-white font-medium flex items-center justify-center gap-7' 
-onClick={() => signIn('google', { callbackUrl: 'http://localhost:3000/home' })}>
-<Image src="./assets/googleicon.svg" alt='Google Logo' width={30} height={30}/> Continue with Google
-</button>
+<GoogleButton />
+{isSubmitting}
 </form>
 
 <div className='hidden lg:block rounded-xl overflow-hidden w-[55%] h-full'>

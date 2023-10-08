@@ -2,14 +2,20 @@
 import Image from 'next/image';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import {useForm} from 'react-hook-form';
+import {useForm, SubmitHandler} from 'react-hook-form';
 import { signIn, signOut, useSession, getProviders, SessionProvider} from 'next-auth/react';
+import Link from "next/link";
+import GoogleButton from '@/Components/GoogleButton';
 
 
 export default function Home() {
-  const form = useForm();
-  const {formState, handleSubmit, register, control, watch} = form;
-  const {errors} = formState;
+  const form = useForm({defaultValues: {
+    email: "",
+    username: "",
+    password: "",
+  }},);
+
+  const {formState: { errors, isSubmitting }, handleSubmit, register, control, watch} = form;
   const watchHolder = watch();
   const [holdBtn, setHoldBtn] = useState(true);
   const {data: session} = useSession();
@@ -44,9 +50,36 @@ export default function Home() {
     setUpProviders();
   }, []);
 
+
+  const [message, setMessage] = useState(null);
+
+  const formSubmit = async (form) => {
+    const { username, email, password } = form;
+
+    try {
+      const res = await fetch("/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      });
+      if (res.status === 201) {
+        router.push("/login?success=Account has been created");
+      }
+    } catch (err) {
+      setMessage(err);
+    }
+  };
+
+
   return (
     <main className="block min-h-screen lg:flex p-4 bg-[#202227]">
-      <form onSubmit={handleSubmit()} className='bg-[#202227] w-full h-full lg:w-[45%] lg:px-24 lg:pr-28'>
+      <form onSubmit={handleSubmit(formSubmit)} className='bg-[#202227] w-full h-full lg:w-[45%] lg:px-24 lg:pr-28'>
       <Image src="./assets/logo.svg"
       width={100}
       height={100}
@@ -141,9 +174,10 @@ export default function Home() {
         </div>
         <p className='text-red-500 text-left font-normal text-[11px] mt-3'>{errors.terms?.message}</p> 
       </div>
+      <p className='font-normal font-poppins text-[13px] text-[#8692A6] mt-1'>Already have an account? <span className='text-[#5871EB]'><Link href='/login'>Log In</Link></span></p>
 
       <button type='submit'
-      disabled={holdBtn}
+      disabled={holdBtn || isSubmitting}
       onClick={handleSubmit}
       className={`text-white w-full  ${holdBtn ? "bg-[#8497f55d] cursor-not-allowed" : "bg-[#5871EB] cursor-pointer"} ease-in-out transition-all duration-300 w-full h-[60px] my-10 mb-5 rounded-sm text-white font-medium flex items-center justify-center`}>
         Register Account
@@ -155,12 +189,8 @@ export default function Home() {
         <div className='w-[50%] h-[0.5px] bg-[#F5F5F5]'></div>
       </div>
 
-       <button 
-      type='button' 
-      className='bg-black w-full h-[60px] my-5 rounded-sm text-white font-medium flex items-center justify-center gap-7' 
-      onClick={() => signIn()}>
-        <Image src="./assets/googleicon.svg" alt='Google Logo' width={30} height={30}/> Register with Google
-      </button>
+      <GoogleButton/>
+      {isSubmitting}
       </form>
 
       <div className='hidden lg:block rounded-xl overflow-hidden w-[55%] h-full'>
