@@ -18,7 +18,7 @@ export default function Login() {
   const {formState: { errors, isSubmitting }, handleSubmit, register, control, watch} = form;
   const watchHolder = watch();
   const [holdBtn, setHoldBtn] = useState(true);
-  const session = useSession();
+  const {data: session} = useSession();
   const [providers, setProviders] = useState(null);
   const errorMessage = session?.error?.message;
   
@@ -66,7 +66,7 @@ useEffect(() => {
   setError(params.get("error"));
 }, [params]);
 
-if (session.status === "authenticated") {
+if (session) {
   router?.push("/home");
 }
 
@@ -77,6 +77,12 @@ const formSubmit = (form) => {
     password,
   });
 };
+
+// let callbackUrl = params.get("callbackUrl");
+
+// if (callbackUrl === null) {
+//   callbackUrl = "/home";
+// }
 
   
 return (
@@ -155,7 +161,13 @@ notBlackListed:(fieldValue)=>{
 <div className='w-[50%] h-[0.5px] bg-[#F5F5F5]'></div>
 </div>
 
-<GoogleButton />
+<button 
+type='button' 
+className='bg-black w-full h-[60px] my-5 rounded-sm text-white font-medium flex items-center justify-center gap-7' 
+onClick={() => {signIn("google", {callbackUrl: "http://localhost:3000/api/auth/callback/google"})}}>
+<Image src="./assets/googleicon.svg" alt='Google Logo' width={30} height={30}/> Continue with Google
+</button>
+
 {isSubmitting}
 </form>
 

@@ -1,12 +1,12 @@
 "use client"
-import authOptions from "@/utils/authOptions";
-import { getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { signOut } from "next-auth/react";
 
-export default async function Dashboard() {
-  const session = await getServerSession(authOptions);
+export default function Dashboard() {
+  const {data: session} = useSession();
   if (!session) {
-    redirect("/login/?callbackUrl=/home");
+    redirect("/login");
   }
   return (
     <main className="mx-auto mt-4 max-w-5xl px-6">

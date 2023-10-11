@@ -9,7 +9,7 @@ export const dbConnect = async () =>{
         return;
     }
     try {
-        await mongoose.connect(process.env.MONGODB_URI, {
+        await mongoose.connect("mongodb+srv://abasskoyang12345:Koyang12@cluster0.ke9yfha.mongodb.net/?retryWrites=true&w=majority", {
             dbName: 'logo',
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -17,6 +17,6 @@ export const dbConnect = async () =>{
         isConnected = true;
         console.log('MongoDB connected')
     } catch (error) {
-        console.log(error)
+        console.log("Mongodb error message:", error)
     }
 };

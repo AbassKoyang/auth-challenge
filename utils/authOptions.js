@@ -1,22 +1,19 @@
 // import NextAuth from "next-auth";
 // import GoogleProvider from "next-auth/providers/google";
-// import { MongoDBAdapter } from "@auth/mongodb-adapter";
 // import CredentialsProvider from "next-auth/providers/credentials";
 // import dbConnect from "./database";
-// import clientPromise from "./clientPromise";
 // import bcrypt from "bcryptjs"
 // import User  from "../models/User";
 
 // const authOptions = {
-//   adapter: MongoDBAdapter(clientPromise),
 //   session: {
 //     strategy: "jwt",
 //   },
-//   secret: process.env.NEXTAUTH_SECRET,
+//   secret: "J3ASPbb+Z8zOEm7JhCXjYk26+gidMHLWggO/HtB4t1U=",
 //   providers: [
 //     GoogleProvider({
-//       clientId: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//       clientId: "572161231405-1q87s6de5o6j89ftp8ec140khjm2jfc2.apps.googleusercontent.com",
+//       clientSecret: "GOCSPX-KMvQgVtXYyZ3kUD8BFEv7pfz-aT",
 //     }),
 //     CredentialsProvider({
 //       name: "Credentials",
