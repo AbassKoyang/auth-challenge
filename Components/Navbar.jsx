@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
 
-    <nav className={`flex-between w-full max-w-7xl mb-10 py-4 bg-[#202227] px-0`}>
+    <nav className={`flex-between w-full max-w-7xl mb-10 py-5 bg-[#202227] px-0`}>
     <Link href="/" className="flex gap-2 flex-center">
         <Image src="./assets/logo.svg" 
         alt="Promptopia logo"
@@ -63,14 +63,14 @@ const Navbar = () => {
                             My Profile
                         </Link>
                         <Link
-                        href="/create-prompt"
+                        href="/create-post"
                         className="dropdown_link font-inter"
                         onClick={()=> setToggleDropDown(false)}
                         >
-                            Create Prompt
+                            Create Post
                         </Link>
                         <button 
-                        className="mt-5 w-full black_btn font-inter"
+                        className="mt-5 w-full black_btn bg-blue-700 font-inter"
                         type="button"
                         onClick={()=>{
                         setToggleDropDown(false);

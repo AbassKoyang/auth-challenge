@@ -13,10 +13,10 @@ const Home = () => {
         <h1 className="head_text text-center">
             Discover & Share
             <br className="max-w-md:hidden"/>
-            <span className="orange_gradient text-center font-satoshi">Accurate Predictions</span>
+            <span className="orange_gradient text-center font-satoshi">Amazing  Pictures</span>
         </h1>
         <p className="desc text-center font-inter">
-            Logo is an open-source community for sports enthusiast to discover, create and share accurate match predictions.
+            Logo is an open-source community for photographers and individuals who love to see breaking enthusiast to discover, create and share stunning images.
         </p>
         <Feed/>
     </main>

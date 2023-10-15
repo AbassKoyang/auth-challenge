@@ -10,7 +10,7 @@ const CreatePost = () => {
     const router = useRouter();
     const { data: session } = useSession();
     const [submitting, setIsSubmitting] = useState(false);
-    const [post, setPost] = useState({ caption: "", tag: "", picture: null});
+    const [post, setPost] = useState({ caption: "", tag: "",});
   
     const createPost = async (e) => {
       e.preventDefault();
@@ -23,7 +23,6 @@ const CreatePost = () => {
               caption: post.caption,
               userId: session?.user.id,
               tag: post.tag,
-              picture: post.picture,
             }),
           });
   
@@ -38,7 +37,7 @@ const CreatePost = () => {
     };
   
     return (
-      <section className='w-full max-w-full flex-col flex-start lg:px-20 px-6'>
+      <section className='w-full max-w-full flex-col flex-start'>
       <Navbar/>
       <Form
         type='Create'

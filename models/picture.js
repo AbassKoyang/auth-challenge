@@ -13,10 +13,6 @@ const PictureSchema = new Schema({
         type: String,
         required: [true, 'Tag is required.'],
     },
-    picture: {
-        type: Buffer,
-        required: [true, 'Image is required.'],
-    }
 })
 
 const Picture = models.Picture || model('Picture', PictureSchema);
