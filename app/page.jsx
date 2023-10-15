@@ -6,6 +6,7 @@ import {useForm, SubmitHandler} from 'react-hook-form';
 import { signIn, signOut, useSession, getProviders, SessionProvider} from 'next-auth/react';
 import Link from "next/link";
 import GoogleButton from '@/Components/GoogleButton';
+import { useRouter } from 'next/navigation';
 
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
   const {data: session} = useSession();
   const [providers, setProviders] = useState(null);
   const errorMessage = session?.error?.message;
+  const router = useRouter();
   
   useEffect(() => {
     if (
@@ -51,13 +53,22 @@ export default function Home() {
   }, []);
 
 
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (session) {
+      router.push("/home")
+    }
+  }, [session])
+  
 
   const formSubmit = async (form) => {
+
+    signIn("credentials")
     const { username, email, password } = form;
 
     try {
-      const res = await fetch("/", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,11 +79,12 @@ export default function Home() {
           password,
         }),
       });
-      if (res.status === 201) {
-        router.push("/login?success=Account has been created");
+      if (res.ok) {
+        router.push("/home");
       }
     } catch (err) {
       setMessage(err);
+      console.log(message)
     }
   };
 
@@ -99,7 +111,7 @@ export default function Home() {
           },
           pattern:{
             value: /^[A-Za-z]+$/,
-            message: "Username must contain only alphabetic characters."
+            message: "Username must contain only alphabetic characters (No spaces)."
           }
         }
         )}

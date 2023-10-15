@@ -1,6 +1,6 @@
-import './globals.css'
-import { Poppins } from 'next/font/google'
-import Provider from '@/Components/Provider'
+import './globals.css';
+import { Poppins } from 'next/font/google';
+import Provider from '@/Components/Provider';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -15,7 +15,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
+      <body className={`bg-[#202227]`}>
       <Provider>
         {children}
       </Provider>

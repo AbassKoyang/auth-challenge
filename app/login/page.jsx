@@ -78,12 +78,6 @@ const formSubmit = (form) => {
   });
 };
 
-// let callbackUrl = params.get("callbackUrl");
-
-// if (callbackUrl === null) {
-//   callbackUrl = "/home";
-// }
-
   
 return (
 <main className="block min-h-screen lg:flex p-4 bg-[#202227]">
@@ -164,7 +158,7 @@ notBlackListed:(fieldValue)=>{
 <button 
 type='button' 
 className='bg-black w-full h-[60px] my-5 rounded-sm text-white font-medium flex items-center justify-center gap-7' 
-onClick={() => {signIn("google", {callbackUrl: "http://localhost:3000/api/auth/callback/google"})}}>
+onClick={() => {signIn("google")}}>
 <Image src="./assets/googleicon.svg" alt='Google Logo' width={30} height={30}/> Continue with Google
 </button>
 

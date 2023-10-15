@@ -2,20 +2,25 @@
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { signOut } from "next-auth/react";
+import Navbar from "@/Components/Navbar";
+import Feed from "@/Components/Feed";
 
-export default function Dashboard() {
+const Home = () => {
   const {data: session} = useSession();
-  if (!session) {
-    redirect("/login");
-  }
   return (
-    <main className="mx-auto mt-4 max-w-5xl px-6">
-      <h2>
-        {session !== null && (
-          <p className="text-4xl font-semibold">Hi {session?.user?.name}!</p>
-        )}
-      </h2>
-      <button type='button' onClick={() => signOut({callbackUrl: "http://localhost:3000/login"})}>Sign Out Now</button>
+    <main className="mx-auto mt-0 max-w-7xl px-0 bg-[#202227] flex-center flex-col">
+      <Navbar/>
+        <h1 className="head_text text-center">
+            Discover & Share
+            <br className="max-w-md:hidden"/>
+            <span className="orange_gradient text-center font-satoshi">Accurate Predictions</span>
+        </h1>
+        <p className="desc text-center font-inter">
+            Logo is an open-source community for sports enthusiast to discover, create and share accurate match predictions.
+        </p>
+        <Feed/>
     </main>
   );
 }
+
+export default Home
